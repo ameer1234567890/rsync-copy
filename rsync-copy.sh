@@ -15,12 +15,12 @@ if [ "$OSTYPE" = "linux-gnu" ]; then
 elif [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
   # This is cygwin or Git bash on Windows
   DEST_DIRECTORY="$(echo "$USERPROFILE"/Downloads | sed 's/\\/\//g' | sed 's/://g' | sed 's/^/\/cygdrive\//g')"
-elif [ "$OSTYPE" = "linux-android" ]; then
-  # This is Android (termux)
+elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
+  # This is Termux on Android
   DEST_DIRECTORY="$HOME"
 else
   # Unable to identify OS
-  DEST_DIRECTORY=""
+  DEST_DIRECTORY="."
 fi
 
 
@@ -96,7 +96,7 @@ if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
     cmd "/C temp.bat"
     rm temp.bat
   fi
-elif [ "$OSTYPE" = "linux-android" ]; then
+elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
   rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\" >> temp.bat
   status="$?"
   if [ "$status" = 0 ]; then
