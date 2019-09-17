@@ -97,7 +97,7 @@ if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
     rm temp.bat
   fi
 elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
-  rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\" >> temp.bat
+  sh -c "rsync --progress -h --partial \"""$remote_file""\" \"""$DEST_DIRECTORY""\""
   status="$?"
   if [ "$status" = 0 ]; then
     termux-notification --title 'rsync-copy' --content "File copied successfully!"
@@ -105,5 +105,5 @@ elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
     termux-notification --title 'rsync-copy' --content "An error occured during file copy! Please try again later!"
   fi
 else
-  rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\" >> temp.bat
+  rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\"
 fi
