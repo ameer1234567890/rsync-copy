@@ -105,5 +105,5 @@ elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
     termux-notification --title 'rsync-copy' --content "An error occured during file copy! Please try again later!"
   fi
 else
-  rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\"
+  sh -c "rsync --progress -h --partial \"""$remote_file""\" \"""$DEST_DIRECTORY""\""
 fi
