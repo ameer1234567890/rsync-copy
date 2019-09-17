@@ -9,14 +9,14 @@
 RSYNC_LOCATION="rsync://192.168.100.44/usb1/aria2/"
 
 # shellcheck disable=SC2039
-if [ "$OSTYPE" = "linux-gnu" ]; then
-  # This is Linux
-  DEST_DIRECTORY="$HOME"
-elif [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
+if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
   # This is cygwin or Git bash on Windows
   DEST_DIRECTORY="$(echo "$USERPROFILE"/Downloads | sed 's/\\/\//g' | sed 's/://g' | sed 's/^/\/cygdrive\//g')"
 elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
   # This is Termux on Android
+  DEST_DIRECTORY="$HOME"
+elif [ "$(uname)" = "Linux" ]; then
+  # This is Linux
   DEST_DIRECTORY="$HOME"
 else
   # Unable to identify OS
