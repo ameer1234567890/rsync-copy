@@ -25,7 +25,7 @@ fi
 
 
 cleanup() {
-  rm temp.txt
+  rm temp.txt 2>/dev/null
   exit
 }
 
@@ -61,7 +61,7 @@ if [ "$opt" -eq "$i" ]; then
 fi
 
 remote_file="$RSYNC_LOCATION$(sed -n "${opt}p" temp.txt)"
-rm temp.txt
+rm temp.txt 2>/dev/null
 
 while true; do
   printf "Please specify destination directory (%s): " "$DEST_DIRECTORY"
@@ -84,7 +84,7 @@ if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
   echo rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\" >> temp.bat
   cmd "/C temp.bat"
   status="$?"
-  rm temp.bat
+  rm temp.bat 2>/dev/null
   if [ "$status" = 0 ]; then
     echo "@echo off" > temp.bat
     echo "powershell -Command \"[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='File copied successfully!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Information'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Info'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);\"" >> temp.bat
@@ -94,7 +94,7 @@ if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
     echo "@echo off" > temp.bat
     echo "powershell -Command \"[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='An error occured during file copy! Please try again later!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Error'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Error'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);\"" >> temp.bat
     cmd "/C temp.bat"
-    rm temp.bat
+    rm temp.bat 2>/dev/null
   fi
 elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
   sh -c "rsync --progress -h --partial \"""$remote_file""\" \"""$DEST_DIRECTORY""\""
@@ -107,3 +107,7 @@ elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
 else
   sh -c "rsync --progress -h --partial \"""$remote_file""\" \"""$DEST_DIRECTORY""\""
 fi
+
+echo "======================================================"
+
+sh "$0"
