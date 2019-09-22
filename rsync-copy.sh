@@ -11,7 +11,7 @@ RSYNC_LOCATION="rsync://192.168.100.44/usb1/aria2/"
 # shellcheck disable=SC2039
 if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
   # This is cygwin or Git bash on Windows
-  DEST_DIRECTORY="$(echo "$USERPROFILE"/Downloads | sed 's/\\/\//g' | sed 's/://g' | sed 's/^/\/cygdrive\//g')"
+  DEST_DIRECTORY="$(echo "$USERPROFILE"/Downloads | sed 's/\\/\//g; s/://g; s/^/\/cygdrive\//g')"
 elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
   # This is Termux on Android
   DEST_DIRECTORY="$HOME"
