@@ -12,7 +12,7 @@ RSYNC_LOCATION="rsync://192.168.100.44/usb1/aria2/"
 if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
   # This is cygwin or Git bash on Windows
   DEST_DIRECTORY="$(echo "$USERPROFILE"/Downloads | sed 's/\\/\//g; s/://g; s/^/\/cygdrive\//g')"
-elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
+elif [ "$(echo "$PREFIX" | grep -F "com.termux")" != "" ]; then
   # This is Termux on Android
   DEST_DIRECTORY="$HOME"
 elif [ "$(uname)" = "Linux" ]; then
@@ -96,7 +96,7 @@ if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
     cmd "/C temp.bat"
     rm temp.bat 2>/dev/null
   fi
-elif [ "$(echo "$PREFIX" | grep "com.termux")" != "" ]; then
+elif [ "$(echo "$PREFIX" | grep -F "com.termux")" != "" ]; then
   sh -c "rsync --progress -h --partial \"""$remote_file""\" \"""$DEST_DIRECTORY""\""
   status="$?"
   if [ "$status" = 0 ]; then
