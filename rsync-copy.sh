@@ -36,9 +36,9 @@ IFS='
 i=0
 rm temp.txt 2>/dev/null
 for file in $(rsync $RSYNC_LOCATION); do
-  if [ "$(echo "$file" | awk '{for (i=5; i<NF; i++) printf $i " "; print $NF}')" != "." ]; then
+  if [ "$(echo "$file" | awk '{print substr($0, index($0,$5))}')" != "." ]; then
     i=$((i + 1))
-    file="$(echo "$file" | awk '{for (i=5; i<NF; i++) printf $i " "; print $NF}')"
+    file="$(echo "$file" | awk '{print substr($0, index($0,$5))}')"
     echo "$file" >> temp.txt
     echo "[$i] $file"
   fi
