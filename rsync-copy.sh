@@ -81,6 +81,7 @@ echo "======================================================"
 # shellcheck disable=SC2039
 if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
   echo "@echo off" > temp.bat
+  echo "chcp 65001 > NUL" >> temp.bat
   echo rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\" >> temp.bat
   cmd "/C temp.bat"
   status="$?"
