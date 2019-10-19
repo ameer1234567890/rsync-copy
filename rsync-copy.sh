@@ -38,25 +38,33 @@ rm temp.txt 2>/dev/null
 for file in $(rsync $RSYNC_LOCATION); do
   if [ "$(echo "$file" | awk '{print substr($0, index($0,$5))}')" != "." ]; then
     i=$((i + 1))
+    size="$(echo "$file" | awk '{print $2}' | tr -d ',')"
+    if [ "$size" -lt 1024 ]; then
+      size="$size B"
+    elif [ "$size" -lt 1048576 ]; then
+      size="$((size / 1024)) KB"
+    elif [ "$size" -lt 1073741824 ]; then
+      size="$((size / 1048576)) MB"
+    else
+      size="$((size / 1073741824)) GB"
+    fi
     file="$(echo "$file" | awk '{print substr($0, index($0,$5))}')"
     echo "$file" >> temp.txt
-    echo "[$i] $file"
+    echo "[$i] $file [$size]"
   fi
 done
-
-i=$((i + 1))
-echo "[$i] Exit"
 IFS=$OFS
+echo "[0] Exit"
 
 while true; do
   printf "Select option: "
   read -r opt
-  if [ "$opt" -eq "$opt" ] 2>/dev/null && [ "$opt" -gt 0 ] 2>/dev/null && [ "$opt" -le "$i" ] 2>/dev/null; then
+  if [ "$opt" -eq "$opt" ] 2>/dev/null && [ "$opt" -gt -1 ] 2>/dev/null && [ "$opt" -le "$i" ] 2>/dev/null; then
     break
   fi
 done
 
-if [ "$opt" -eq "$i" ]; then
+if [ "$opt" -eq 0 ]; then
   cleanup
 fi
 
