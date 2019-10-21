@@ -42,11 +42,14 @@ for file in $(rsync $RSYNC_LOCATION); do
     if [ "$size" -lt 1024 ]; then
       size="$size B"
     elif [ "$size" -lt 1048576 ]; then
-      size="$((size / 1024)) KB"
+      size="$(awk -v s="$size" 'BEGIN { print (s / 1024) }')"
+      size="$(printf "%0.2f\n" "$size") KB"
     elif [ "$size" -lt 1073741824 ]; then
-      size="$((size / 1048576)) MB"
+      size="$(awk -v s="$size" 'BEGIN { print (s / 1048576) }')"
+      size="$(printf "%0.2f\n" "$size") MB"
     else
-      size="$((size / 1073741824)) GB"
+      size="$(awk -v s="$size" 'BEGIN { print (s / 1073741824) }')"
+      size="$(printf "%0.2f\n" "$size") GB"
     fi
     file="$(echo "$file" | awk '{print substr($0, index($0,$5))}')"
     echo "$file" >> temp.txt
