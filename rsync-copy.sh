@@ -36,7 +36,7 @@ IFS='
 i=0
 rm temp.txt 2>/dev/null
 for file in $(rsync $RSYNC_LOCATION); do
-  if [ "$(echo "$file" | awk '{print substr($0, index($0,$5))}')" != "." ]; then
+  if [ "$(echo "$file" | awk '{print substr($0, index($0,$5))}')" != "." ] && [ "$(echo "$file" | tail -c 7)" != ".aria2" ]; then
     i=$((i + 1))
     size="$(echo "$file" | awk '{print $2}' | tr -d ',')"
     if [ "$size" -lt 1024 ]; then
