@@ -98,16 +98,13 @@ if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
   status="$?"
   rm temp.bat 2>/dev/null
   if [ "$status" = 0 ]; then
-    echo "@echo off" > temp.bat
-    echo "powershell -Command \"[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='File copied successfully!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Information'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Info'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);\"" >> temp.bat
-    cmd "/C temp.bat"
-    rm temp.bat
+    echo "[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='File copied successfully!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Information'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Info'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);" > temp.ps1
+    powershell -File temp.ps1
   else
-    echo "@echo off" > temp.bat
-    echo "powershell -Command \"[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='An error occured during file copy! Please try again later!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Error'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Error'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);\"" >> temp.bat
-    cmd "/C temp.bat"
-    rm temp.bat 2>/dev/null
+    echo "[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='An error occured during file copy! Please try again later!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Error'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Error'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);" > temp.ps1
+    powershell -File temp.ps1
   fi
+  rm temp.ps1
 elif [ "$(echo "$PREFIX" | grep -F "com.termux")" != "" ]; then
   sh -c "rsync --progress -h --partial \"""$remote_file""\" \"""$DEST_DIRECTORY""\""
   status="$?"
