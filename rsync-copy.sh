@@ -9,7 +9,8 @@
 RSYNC_LOCATION="rsync://192.168.100.44/usb1/aria2/"
 
 # shellcheck disable=SC2039
-if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
+if [ "$OSTYPE" = "cygwin" ] \
+|| [ "$OSTYPE" = "msys" ]; then
   # This is cygwin or Git bash on Windows
   DEST_DIRECTORY="$(echo "$USERPROFILE"/Downloads | sed 's/\\/\//g; s/://g; s/^/\/cygdrive\//g')"
 elif [ "$(echo "$PREFIX" | grep -F "com.termux")" != "" ]; then
@@ -36,7 +37,8 @@ IFS='
 i=0
 rm temp.txt 2>/dev/null
 for file in $(rsync $RSYNC_LOCATION); do
-  if [ "$(echo "$file" | awk '{print substr($0, index($0,$5))}')" != "." ] && [ "$(echo "$file" | tail -c 7)" != ".aria2" ]; then
+  if [ "$(echo "$file" | awk '{print substr($0, index($0,$5))}')" != "." ] \
+  && [ "$(echo "$file" | tail -c 7)" != ".aria2" ]; then
     i=$((i + 1))
     size="$(echo "$file" | awk '{print $2}' | tr -d ',')"
     if [ "$size" -lt 1024 ]; then
@@ -62,7 +64,9 @@ echo "[0] Exit"
 while true; do
   printf "Select option: "
   read -r opt
-  if [ "$opt" -eq "$opt" ] 2>/dev/null && [ "$opt" -gt -1 ] 2>/dev/null && [ "$opt" -le "$i" ] 2>/dev/null; then
+  if [ "$opt" -eq "$opt" ] 2>/dev/null \
+  && [ "$opt" -gt -1 ] 2>/dev/null \
+  && [ "$opt" -le "$i" ] 2>/dev/null; then
     break
   fi
 done
@@ -77,7 +81,8 @@ rm temp.txt 2>/dev/null
 while true; do
   printf "Please specify destination directory (%s): " "$DEST_DIRECTORY"
   read -r opt
-  if [ -d "$opt" ] 2>/dev/null || [ "$opt" = "" ]; then
+  if [ -d "$opt" ] 2>/dev/null \
+  || [ "$opt" = "" ]; then
     break
   fi
 done
@@ -90,18 +95,34 @@ echo "Starting file copy..."
 echo "======================================================"
 
 # shellcheck disable=SC2039
-if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ]; then
+if [ "$OSTYPE" = "cygwin" ] \
+|| [ "$OSTYPE" = "msys" ]; then
   echo "@echo off" > temp.bat
   echo "chcp 65001 > NUL" >> temp.bat
   echo rsync --progress -h --partial \""$remote_file"\" \""$DEST_DIRECTORY"\" >> temp.bat
   cmd "/C temp.bat"
   status="$?"
   rm temp.bat 2>/dev/null
+  # shellcheck disable=SC2129
   if [ "$status" = 0 ]; then
-    echo "[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='File copied successfully!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Information'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Info'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);" > temp.ps1
+    echo "[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');" > temp.ps1
+    echo "\$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon;" >> temp.ps1
+    echo "\$objNotifyIcon.BalloonTipText='File copied successfully!';" >> temp.ps1
+    echo "\$objNotifyIcon.Icon=[system.drawing.systemicons]::'Information';" >> temp.ps1
+    echo "\$objNotifyIcon.BalloonTipTitle='rsync-copy';" >> temp.ps1
+    echo "\$objNotifyIcon.BalloonTipIcon='Info';" >> temp.ps1
+    echo "\$objNotifyIcon.Visible=\$True;" >> temp.ps1
+    echo "\$objNotifyIcon.ShowBalloonTip(5000);" >> temp.ps1
     powershell -File temp.ps1
   else
-    echo "[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon; \$objNotifyIcon.BalloonTipText='An error occured during file copy! Please try again later!'; \$objNotifyIcon.Icon=[system.drawing.systemicons]::'Error'; \$objNotifyIcon.BalloonTipTitle='rsync-copy'; \$objNotifyIcon.BalloonTipIcon='Error'; \$objNotifyIcon.Visible=\$True; \$objNotifyIcon.ShowBalloonTip(5000);" > temp.ps1
+    echo "[void] [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');" > temp.ps1
+    echo "\$objNotifyIcon=New-Object System.Windows.Forms.NotifyIcon;" >> temp.ps1
+    echo "\$objNotifyIcon.BalloonTipText='An error occured during file copy! Please try again later!';" >> temp.ps1
+    echo "\$objNotifyIcon.Icon=[system.drawing.systemicons]::'Error';" >> temp.ps1
+    echo "\$objNotifyIcon.BalloonTipTitle='rsync-copy';" >> temp.ps1
+    echo "\$objNotifyIcon.BalloonTipIcon='Error';" >> temp.ps1
+    echo "\$objNotifyIcon.Visible=\$True;" >> temp.ps1
+    echo "\$objNotifyIcon.ShowBalloonTip(5000);" >> temp.ps1
     powershell -File temp.ps1
   fi
   rm temp.ps1
