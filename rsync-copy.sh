@@ -2,7 +2,8 @@
 
 # NOTES:
 # rsync binaries for Windows are compiled for Cygwin, and so
-# requires paths starting with "/cygwin/c/", "/cygwin/d/", etc...
+# requires paths starting with "/cygdrive/c/", "/cygdrive/d/", etc...
+# 
 # rsync binaries which are compiled for Cygwin, needs to be run
 # on Windows console, rather than Git bash, etc...
 
