@@ -7,7 +7,7 @@
 # rsync binaries which are compiled for Cygwin, needs to be run
 # on Windows console, rather than Git bash, etc...
 
-RSYNC_LOCATION="rsync://192.168.100.44/usb1/aria2/"
+RSYNC_LOCATION="rsync://miwifimini.lan/usb1/aria2/"
 
 # shellcheck disable=SC2039
 if [ "$OSTYPE" = "cygwin" ] \
