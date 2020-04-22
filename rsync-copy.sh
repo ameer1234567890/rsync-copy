@@ -54,6 +54,9 @@ for file in $(rsync $RSYNC_LOCATION); do
       size="$(awk -v s="$size" 'BEGIN { print (s / 1073741824) }')"
       size="$(printf "%0.2f\n" "$size") GB"
     fi
+    if [ "$(echo "$file" | awk '{print substr($1, 1, 1)}')" = "d" ]; then
+      size="DIRECTORY"
+    fi
     file="$(echo "$file" | awk '{print substr($0, index($0,$5))}')"
     echo "$file" >> temp.txt
     echo "[$i] $file [$size]"
